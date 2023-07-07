@@ -3,26 +3,31 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <thread>
 
 #pragma warning(disable: 4996)
 std::vector<SOCKET> Connection;
+std::unordered_map<int, SOCKET> ConnectionMap;
 
-void ClientHandler(int indexClient) {
+void ClientHandler(int idClient) {
     char message[128];
     while (true) {
-        recv(Connection[indexClient], message, sizeof(message), NULL);
+        auto itr = ConnectionMap.find(idClient);
+        if (itr == ConnectionMap.end()) 
+          break;
+        recv(itr->second, message, sizeof(message), NULL);
         if (message[0] == '0') {
-            std::cout << "close connection " << indexClient << "\n";
-            std::vector<SOCKET>::const_iterator iter = Connection.cbegin() + indexClient;
-            closesocket(Connection[indexClient]);
-            Connection.erase(iter);
+            std::cout << "close connection " << idClient << "\n";
+
+            closesocket(itr->second);
+            ConnectionMap.erase(itr);
+            break;
         }
-        for (int i = 0; i < Connection.size(); i++) {
-            if (i != indexClient) {
-                send(Connection[i], message, sizeof(message), NULL);
-            }
-                
+
+        for (auto element : ConnectionMap) {
+          if (element.first != idClient)
+            send(element.second, message, sizeof(message), NULL);
         }
     }
 }
@@ -36,7 +41,7 @@ void NewConnectionCreator(const SOCKET& sListen, SOCKADDR_IN& addr, int& addr_si
         std::cout << "Client Connected!" << std::endl;
         char msg[64] = "Welcome!";
         send(newConnection, msg, sizeof(msg), NULL);
-        Connection.push_back(newConnection);
+        ConnectionMap.emplace(client_index, newConnection);
         CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandler,
             (LPVOID)client_index, NULL, NULL);
     }
