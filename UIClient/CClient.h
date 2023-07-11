@@ -16,7 +16,7 @@ public:
   bool connectClient();
   void disconnectClient();
 
-  void sendMessage(System::String messageText);
+  void sendMessage(System::String^ messageText);
 
 private:
   SOCKET Connection;
