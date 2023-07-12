@@ -1,4 +1,5 @@
 #pragma once
+#include "CClient.h"
 
 namespace UIClient {
 
@@ -14,6 +15,7 @@ namespace UIClient {
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
+		CClient mClient;
 	public:
 		MyForm(void)
 		{
@@ -112,12 +114,23 @@ namespace UIClient {
 			this->Controls->Add(this->txtBoxChat);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
 	private: System::Void btnSend_Click(System::Object^ sender, System::EventArgs^ e) {
+		mClient.sendMessage(txtBoxMessage->Text);
+		txtBoxChat->Text += "You: " + txtBoxMessage->Text + "\n";
+		txtBoxMessage->Text = "";
+
 	}
+private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+	if (mClient.connectClient()) {
+		lblStatus->Text = "Connected";
+		lblStatus->ForeColor = System::Drawing::Color::Green;
+	}
+}
 };
 }
