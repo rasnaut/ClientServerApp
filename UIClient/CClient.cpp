@@ -2,11 +2,12 @@
 #include "CClient.h"
 #include <utility>
 const char* toCChar(System::String^ str) {
-  
-  char* result_str = new char[str->Length];
+
+  char* result_str = new char[str->Length+1];
   for (int i = 0; i < str->Length; i++) {
     result_str[i] = str[i];
   }
+  result_str[str->Length] = '\0';
   return result_str;
 }
 
