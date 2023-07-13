@@ -60,3 +60,8 @@ void CClient::sendMessage(System::String^ messageText)
   const char* msg = toCChar(messageText);
   send(Connection, msg, sizeof(msg), NULL);
 }
+
+void CClient::disconnect()
+{
+    sendMessage("0");
+}

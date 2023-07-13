@@ -41,6 +41,9 @@ namespace UIClient {
 	private: System::Windows::Forms::Button^ btnSend;
 	private: System::Windows::Forms::Label^ lblStatus;
 	private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
+	private: System::Windows::Forms::Button^ btnDisconnect;
+
+
 	protected:
 
 	protected:
@@ -63,31 +66,35 @@ namespace UIClient {
 			this->btnSend = (gcnew System::Windows::Forms::Button());
 			this->lblStatus = (gcnew System::Windows::Forms::Label());
 			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->btnDisconnect = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// txtBoxChat
 			// 
-			this->txtBoxChat->Location = System::Drawing::Point(12, 12);
+			this->txtBoxChat->Location = System::Drawing::Point(8, 8);
+			this->txtBoxChat->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->txtBoxChat->Multiline = true;
 			this->txtBoxChat->Name = L"txtBoxChat";
 			this->txtBoxChat->ReadOnly = true;
-			this->txtBoxChat->Size = System::Drawing::Size(896, 251);
+			this->txtBoxChat->Size = System::Drawing::Size(599, 165);
 			this->txtBoxChat->TabIndex = 0;
 			// 
 			// txtBoxMessage
 			// 
-			this->txtBoxMessage->Location = System::Drawing::Point(12, 281);
+			this->txtBoxMessage->Location = System::Drawing::Point(8, 183);
+			this->txtBoxMessage->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->txtBoxMessage->Multiline = true;
 			this->txtBoxMessage->Name = L"txtBoxMessage";
-			this->txtBoxMessage->Size = System::Drawing::Size(896, 105);
+			this->txtBoxMessage->Size = System::Drawing::Size(599, 70);
 			this->txtBoxMessage->TabIndex = 1;
 			// 
 			// btnSend
 			// 
 			this->btnSend->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->btnSend->Location = System::Drawing::Point(748, 392);
+			this->btnSend->Location = System::Drawing::Point(499, 255);
+			this->btnSend->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->btnSend->Name = L"btnSend";
-			this->btnSend->Size = System::Drawing::Size(160, 55);
+			this->btnSend->Size = System::Drawing::Size(107, 36);
 			this->btnSend->TabIndex = 2;
 			this->btnSend->Text = L"Send";
 			this->btnSend->UseVisualStyleBackColor = true;
@@ -97,21 +104,34 @@ namespace UIClient {
 			// 
 			this->lblStatus->AutoSize = true;
 			this->lblStatus->ForeColor = System::Drawing::Color::Red;
-			this->lblStatus->Location = System::Drawing::Point(21, 409);
+			this->lblStatus->Location = System::Drawing::Point(14, 266);
+			this->lblStatus->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->lblStatus->Name = L"lblStatus";
-			this->lblStatus->Size = System::Drawing::Size(107, 20);
+			this->lblStatus->Size = System::Drawing::Size(73, 13);
 			this->lblStatus->TabIndex = 3;
 			this->lblStatus->Text = L"Disconnected";
 			// 
+			// btnDisconnect
+			// 
+			this->btnDisconnect->Location = System::Drawing::Point(401, 255);
+			this->btnDisconnect->Name = L"btnDisconnect";
+			this->btnDisconnect->Size = System::Drawing::Size(93, 35);
+			this->btnDisconnect->TabIndex = 4;
+			this->btnDisconnect->Text = L"DISCONNECT";
+			this->btnDisconnect->UseVisualStyleBackColor = true;
+			this->btnDisconnect->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
+			// 
 			// MyForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(920, 459);
+			this->ClientSize = System::Drawing::Size(613, 298);
+			this->Controls->Add(this->btnDisconnect);
 			this->Controls->Add(this->lblStatus);
 			this->Controls->Add(this->btnSend);
 			this->Controls->Add(this->txtBoxMessage);
 			this->Controls->Add(this->txtBoxChat);
+			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
@@ -131,6 +151,10 @@ private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
 		lblStatus->Text = "Connected";
 		lblStatus->ForeColor = System::Drawing::Color::Green;
 	}
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	mClient.disconnect();
+	
 }
 };
 }
