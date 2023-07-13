@@ -55,6 +55,12 @@ bool CClient::connectClient()
   return true;
 }
 
+void CClient::disconnectClient()
+{
+    const char* msg = "0";
+    send(Connection, msg, sizeof(msg), NULL);
+}
+
 void CClient::sendMessage(System::String^ messageText)
 {
   const char* msg = toCChar(messageText);

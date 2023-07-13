@@ -14,7 +14,7 @@ public:
   BOOL CtrlHandler(DWORD fdwCtrlType);
   void ServerHandler();
   bool connectClient();
-  //void disconnectClient();
+  void disconnectClient();
 
   void sendMessage(System::String^ messageText);
 
