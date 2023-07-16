@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CClient.h"
 #include <utility>
+
+
 const char* toCChar(System::String^ str) {
 
   char* result_str = new char[str->Length+1];
@@ -37,13 +39,16 @@ BOOL CClient::CtrlHandler(DWORD fdwCtrlType)
   return 0;
 }
 
-void CClient::ServerHandler()
+void CClient::reciveMessage(System::String^ messageText)
 {
+  thrPointer = new std::thread(messageHandler, 1, messageText);
+}
+
+void CClient::messageHandler(unsigned int connection, System::String^ messageText ) {
   char message[128];
   while (true) {
-    recv(Connection, message, sizeof(message), NULL);
-    /*std::cout << "Anonim: ";
-    std::cout << message << std::endl;*/
+    //recv((SOCKET)connection, message, sizeof(message), NULL);
+    //messageText += "text";//System::String(message);
   }
 }
 

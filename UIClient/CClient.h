@@ -2,6 +2,7 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <winsock2.h>
 #include <Windows.h>
+#include <thread>
 
 #pragma warning(disable: 4996)
 
@@ -12,7 +13,8 @@ public:
   ~CClient();
 
   BOOL CtrlHandler(DWORD fdwCtrlType);
-  void ServerHandler();
+  void reciveMessage(System::String^ messageText);
+  static void messageHandler(unsigned int connection, System::String^ messageText );
   bool connectClient();
   //void disconnectClient();
 
@@ -22,5 +24,6 @@ private:
   SOCKET Connection;
   SOCKADDR_IN* addr;
   int addr_size;
+  std::thread* thrPointer;
 };
 

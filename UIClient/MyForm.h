@@ -23,6 +23,7 @@ namespace UIClient {
 			//
 			//TODO: Add the constructor code here
 			//
+			
 		}
 
 	protected:
@@ -122,7 +123,7 @@ namespace UIClient {
 #pragma endregion
 	private: System::Void btnSend_Click(System::Object^ sender, System::EventArgs^ e) {
 		mClient.sendMessage(txtBoxMessage->Text);
-		txtBoxChat->Text += "You: " + txtBoxMessage->Text + "\n";
+		txtBoxChat->Text += "You: " + txtBoxMessage->Text + "\r\n";
 		txtBoxMessage->Text = "";
 
 	}
@@ -130,6 +131,7 @@ private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
 	if (mClient.connectClient()) {
 		lblStatus->Text = "Connected";
 		lblStatus->ForeColor = System::Drawing::Color::Green;
+		mClient.reciveMessage(txtBoxChat->Text);
 	}
 }
 };
