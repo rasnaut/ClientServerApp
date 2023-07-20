@@ -13,9 +13,10 @@ namespace UIClient {
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
+	
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
-		CClient mClient;
+		
 	public:
 		MyForm(void)
 		{
@@ -37,11 +38,14 @@ namespace UIClient {
 				delete components;
 			}
 		}
+		
 	private: System::Windows::Forms::TextBox^ txtBoxChat;
 	private: System::Windows::Forms::TextBox^ txtBoxMessage;
 	private: System::Windows::Forms::Button^ btnSend;
 	private: System::Windows::Forms::Label^ lblStatus;
 	private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
+	private: System::Windows::Forms::Button^ button1;
+	private: CClient^ cclient;
 	protected:
 
 	protected:
@@ -64,6 +68,8 @@ namespace UIClient {
 			this->btnSend = (gcnew System::Windows::Forms::Button());
 			this->lblStatus = (gcnew System::Windows::Forms::Label());
 			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->cclient = (gcnew CClient());
 			this->SuspendLayout();
 			// 
 			// txtBoxChat
@@ -104,11 +110,24 @@ namespace UIClient {
 			this->lblStatus->TabIndex = 3;
 			this->lblStatus->Text = L"Disconnected";
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(558, 392);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(100, 55);
+			this->button1->TabIndex = 4;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			//this->button1->Click += gcnew System::EventHandler(this, &MyForm::MessageReciver);
+
+			this->cclient->myEventHandler += gcnew System::EventHandler(this, &MyForm::MessageReciver);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(920, 459);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->lblStatus);
 			this->Controls->Add(this->btnSend);
 			this->Controls->Add(this->txtBoxMessage);
@@ -122,17 +141,24 @@ namespace UIClient {
 		}
 #pragma endregion
 	private: System::Void btnSend_Click(System::Object^ sender, System::EventArgs^ e) {
-		mClient.sendMessage(txtBoxMessage->Text);
+		cclient->sendMessage(txtBoxMessage->Text);
 		txtBoxChat->Text += "You: " + txtBoxMessage->Text + "\r\n";
 		txtBoxMessage->Text = "";
 
 	}
-private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
-	if (mClient.connectClient()) {
-		lblStatus->Text = "Connected";
-		lblStatus->ForeColor = System::Drawing::Color::Green;
-		mClient.reciveMessage(txtBoxChat->Text);
+	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		if (cclient->connectClient()) {
+			lblStatus->Text = "Connected";
+			lblStatus->ForeColor = System::Drawing::Color::Green;
+
+			cclient->reciveMessage();
+		}
 	}
-}
+	private: System::Void MessageReciver(System::Object ^ sender, System::EventArgs ^ e) {
+		while (!cclient->getMessageArrayPtr()->empty()) {
+			txtBoxChat->Text += gcnew System::String(cclient->getMessageArrayPtr()->at(0).c_str());
+			cclient->getMessageArrayPtr()->erase(cclient->getMessageArrayPtr()->begin(), cclient->getMessageArrayPtr()->begin() + 1);
+		}
+	}
 };
 }
