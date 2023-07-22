@@ -9,6 +9,7 @@ namespace UIClient {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// Summary for MyForm
@@ -46,6 +47,7 @@ namespace UIClient {
 	private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
 	private: System::Windows::Forms::Button^ button1;
 	private: CClient^ cclient;
+	
 	protected:
 
 	protected:
@@ -61,6 +63,7 @@ namespace UIClient {
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
+
 		void InitializeComponent(void)
 		{
 			this->txtBoxChat = (gcnew System::Windows::Forms::TextBox());
@@ -119,8 +122,8 @@ namespace UIClient {
 			this->button1->Text = L"button1";
 			this->button1->UseVisualStyleBackColor = true;
 			//this->button1->Click += gcnew System::EventHandler(this, &MyForm::MessageReciver);
-
-			this->cclient->myEventHandler += gcnew System::EventHandler(this, &MyForm::MessageReciver);
+			
+			this->cclient->mEv += gcnew myEvent(this, &MyForm::MessageReciver);
 			// 
 			// MyForm
 			// 
@@ -138,6 +141,11 @@ namespace UIClient {
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
+
+			/*this->backgroundWorker1->DoWork +=
+				gcnew System::ComponentModel::DoWorkEventHandler(this, &MyForm::backgroundWorker1_DoWork);*/
+			this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &MyForm::backgroundWorker1_DoWork);
+
 		}
 #pragma endregion
 	private: System::Void btnSend_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -151,14 +159,19 @@ namespace UIClient {
 			lblStatus->Text = "Connected";
 			lblStatus->ForeColor = System::Drawing::Color::Green;
 
-			cclient->reciveMessage();
+			//cclient->reciveMessage();
+			this->backgroundWorker1->RunWorkerAsync();
 		}
 	}
-	private: System::Void MessageReciver(System::Object ^ sender, System::EventArgs ^ e) {
+	private: System::Void MessageReciver() {
 		while (!cclient->getMessageArrayPtr()->empty()) {
 			txtBoxChat->Text += gcnew System::String(cclient->getMessageArrayPtr()->at(0).c_str());
 			cclient->getMessageArrayPtr()->erase(cclient->getMessageArrayPtr()->begin(), cclient->getMessageArrayPtr()->begin() + 1);
 		}
+	}
+				 
+	private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
+		CClient::messageHandler();
 	}
 };
 }

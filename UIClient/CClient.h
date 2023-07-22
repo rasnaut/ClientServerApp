@@ -4,10 +4,15 @@
 #include <Windows.h>
 #include <vector>
 #include <string>
+#include <functional>
 //#include <thread>
 
 #pragma warning(disable: 4996)
-delegate void myEvent(System::Object sender, System::EventArgs^ e);
+
+//System::Void MessageReciver(System::Object^ sender, System::EventArgs^ e)
+delegate System::Void myEvent();
+using MyEvent = std::function<System::Void()>;
+//MyEvent eventPointer;
 ref class CClient : public System::Object
 {
 public:
@@ -16,14 +21,21 @@ public:
 
   BOOL CtrlHandler(DWORD fdwCtrlType);
   void reciveMessage();
-  //static void messageHandler();
+  static void messageHandler();
   bool connectClient();
   std::vector<std::string>* getMessageArrayPtr();
+  /*void setEvent(const MyEvent* mEvent) {
+    eventPointer = *mEvent;
+  }*/
   //void disconnectClient();
 
   void sendMessage(System::String^ messageText);
-  event myEvent^ mEv;
-  System::EventHandler^ myEventHandler;
+  static event myEvent^ mEv;
+  static void emitEvent() {
+    mEv();
+  }
+  
+  //System::EventHandler^ myEventHandler;
 
 private:
   //SOCKET Connection;

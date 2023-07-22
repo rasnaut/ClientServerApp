@@ -41,19 +41,19 @@ BOOL CClient::CtrlHandler(DWORD fdwCtrlType)
   return 0;
 }
 
-void messageHandler() {
+void CClient::messageHandler() {
   char message[128];
   while (true) {
     recv(Connection, message, sizeof(message), NULL);
     messageArray.push_back(std::string(message));
-
+    CClient::emitEvent();
   }
 }
 
 void CClient::reciveMessage()
 {
   //thrPointer = new std::thread(messageHandler, 1, messageText);
-  CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)messageHandler, NULL, NULL, NULL);
+  //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)messageHandler, NULL, NULL, NULL);
 }
 
 
