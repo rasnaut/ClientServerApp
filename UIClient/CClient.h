@@ -8,7 +8,7 @@
 //#include <thread>
 
 #pragma warning(disable: 4996)
-
+const char* toCChar(System::String^ str);
 //System::Void MessageReciver(System::Object^ sender, System::EventArgs^ e)
 delegate System::Void myEvent();
 using MyEvent = std::function<System::Void()>;
